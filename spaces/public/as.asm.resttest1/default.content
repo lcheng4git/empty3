@@ -1,0 +1,102 @@
+<ActivityStreamModel description="" name="resttest1" timezone="Asia/Shanghai" daylight="false" live="true">
+  <ModelInfo validated="true">
+    <Source>
+      <DataSource type="NotifiableRESTSource" connectionTestable="false">
+        <property editorType="checkbox" label="Expose As Runtime Server Service" type="boolean" name="exposeServiceName" desc="Select True if expose one service endpoint URL on runtime server" value="true"/>
+        <property controlName="exposeServiceName" contorlValue="true" optional="true" description="the service name" label="Service Name" type="string" name="serviceName" desc="" value="serviceABC"/>
+      </DataSource>
+      <Filter type="expression">
+        <property name="filter-operation" type="string" value="RegExp"/>
+        <property name="filter-argument" type="string" value=""/>
+      </Filter>
+    <Samples type="upload">
+      <Sample name="" label="CQ-SplitCodeDesc.csv" payloadId="SOURCE" mimeType="application/csv">
+        <Param name="file" label="Upload File" value="CQ-SplitCodeDesc.csv###application/vnd.ms-excel###233758" type="file" encoding="utf-8"/>
+        <Param name="encode" label="Encoding*" value="utf-8" type="enumerations"/>
+      </Sample>
+    </Samples>
+      <Parser name="DelimittedStringToXMLConverter">
+        <Component type="DelimittedStringToXMLConverter" category="converter">
+          <properties>
+            <property desc="Specify whether to adjust the Datetime if daylight savings time is in effect" optional="true" label="Daylight savings" type="boolean" name="daylight" hidden="true" value="false"/>
+            <property desc="Timezone setting for the Datetime field" optional="true" label="Timezone" type="string" value="Asia/Shanghai" name="timezone" hidden="true"/>
+            <property desc="Specify whether to consider the first row as a header." label="Header Row" type="boolean" value="true" name="headerRow"/>
+            <property desc="The delimiter used to split strings into fields." enumDyn="true" enums="comma=Comma Separated,tab=Tab Delimited,," label="Delimiter" type="string" value="comma" name="delimiter"/>
+            <property desc="Optional comma-separated list of field names." optional="true" label="Field Names" type="string" name="fieldNames" constraints="((([a-zA-Z][a-zA-Z0-9_]*)|([a-zA-Z][a-zA-Z0-9_]*:[a-zA-Z]+)),)*((([a-zA-Z][a-zA-Z0-9_]*)|([a-zA-Z][a-zA-Z0-9_]*:[a-zA-Z]+)))?" value="Id,Component,SeverityCode,SeverityDesc,Submitter,PriorityCode,PriorityDesc,TimeStamp,User,State"/>
+          </properties>
+        </Component>
+        <Mapping type="auto" namespace="http://as" root="SourceEvent" prefix="n">
+          <group id="declare namespace n=&quot;http://as&quot;; /n:root" label="root/" name="root">
+            <field id="declare namespace n=&quot;http://as&quot;; /n:root/Id" label="Id" name="Id" value="VITR00156480" type="string"/>
+            <field id="declare namespace n=&quot;http://as&quot;; /n:root/Component" label="Component" name="Component" value="Others" type="string"/>
+            <field id="declare namespace n=&quot;http://as&quot;; /n:root/SeverityCode" label="SeverityCode" name="SeverityCode" value="3" type="integer"/>
+            <field id="declare namespace n=&quot;http://as&quot;; /n:root/SeverityDesc" label="SeverityDesc" name="SeverityDesc" value="Functional, Work-Around" type="string"/>
+            <field id="declare namespace n=&quot;http://as&quot;; /n:root/Submitter" label="Submitter" name="Submitter" value="cyou" type="string"/>
+            <field id="declare namespace n=&quot;http://as&quot;; /n:root/PriorityCode" label="PriorityCode" name="PriorityCode" value="3" type="integer"/>
+            <field id="declare namespace n=&quot;http://as&quot;; /n:root/PriorityDesc" label="PriorityDesc" name="PriorityDesc" value="Normal Queue" type="string"/>
+            <field id="declare namespace n=&quot;http://as&quot;; /n:root/TimeStamp" label="TimeStamp" name="TimeStamp" value="2/26/2010 1:19" type="datetime" constraints="M/d/yy HH:mm" locale=""/>
+            <field id="declare namespace n=&quot;http://as&quot;; /n:root/User" label="User" name="User" value="dowang" type="string"/>
+            <field id="declare namespace n=&quot;http://as&quot;; /n:root/State" label="State" name="State" value="Assigned" type="string"/>
+          </group>
+        </Mapping>
+      </Parser>
+    </Source>
+    <MappingPaths>
+     <path value="Id" label="Id"/>
+     <path value="Component" label="Component"/>
+     <path value="SeverityCode" label="SeverityCode"/>
+     <path value="SeverityDesc" label="SeverityDesc"/>
+     <path value="Submitter" label="Submitter"/>
+     <path value="PriorityCode" label="PriorityCode"/>
+     <path value="PriorityDesc" label="PriorityDesc"/>
+     <path value="TimeStamp" label="TimeStamp"/>
+     <path value="User" label="User"/>
+     <path value="State" label="State"/>
+    </MappingPaths>
+    <GlobalProperties>
+    </GlobalProperties>
+    <DeletedNamespaces>
+    </DeletedNamespaces>
+    <UserSchemas>
+    </UserSchemas>
+        <View name="Default" desc="">
+        <Rule type="PerEvent"/>
+        <Filters type="expression" relation="AND">
+        </Filters>
+        <Mapping output="xml" type="auto">
+        </Mapping>
+        <Targets>
+           <Target name="Target1" type="FileTarget">
+             <property desc="The file and path name of the target." label="File Path" type="string" name="file" value="d:/resttest1.log"/>
+             <property desc="The file encoding. The default is utf-8." constraints="encoding" optional="true" label="File Encoding" type="string" value="UTF-8" name="fileEncoding"/>
+             <property desc="The event type. Only string is supported." hidden="true" enums="string,xml,json,tuple," optional="true" label="Event Type" type="string" value="string" name="eventType"/>
+             <property desc="The file rollover pattern. It can be DATE (default) or SIZE." enumDyn="true" enums="DATE=DATE,SIZE=SIZE," optional="true" label="Rollover Pattern" type="string" value="DATE" name="rolloverPattern"/>
+             <property desc="The file rollover pattern for DATE. The default value is &apos;.&apos;yyyy-MM-dd&apos;.log&apos;. It is ignored for rollover pattern SIZE." controlName="rolloverPattern" contorlValue="DATE" optional="true" label="Date Pattern" type="string" value="&apos;.&apos;yyyy-MM-dd&apos;.log&apos;" name="datePattern"/>
+             <property desc="The maximum file size in byte of rollover pattern SIZE. The default value is 5242880 (5MB). It is ignored for rollover pattern DATE. 0 for single event per file." constraints="min=0, max=10485760, step=1024" controlName="rolloverPattern" contorlValue="SIZE" optional="true" label="Max File Size" type="number" value="5242880" name="maxFileSize" numberType="int"/>
+             <property desc="The maximum number of backup files. The default value is 5." constraints="min=1, max=100, step=1" optional="true" label="Max Backup Index" type="number" value="5" name="maxBackupIndex" numberType="int"/>
+             <property desc="The log4j pattern to write message into file. The default value is %m%n." optional="true" label="Conversion Pattern" type="string" value="%m%n" name="conversionPattern"/>
+             <property desc="Write a header to the target file." optional="true" label="Header" type="string" value="" name="header"/>
+             <property desc="Write a footer to the target file." optional="true" label="Footer" type="string" value="" name="footer"/>
+             <property name="remove_event_wrapper" label="Remove Wrapper" value="false" type="boolean"/>
+             <property name="###parse_to_string###" label="Parse to String" value="false" type="boolean"/>
+             <Mapping output="xml" type="auto" input="xml">
+             </Mapping>
+           </Target>
+        </Targets>
+    </View>
+    <DeploymentSetting>
+      <ServerTag value=""/>
+      <DataSource value="/vitria/m3o/datasource/DefaultDomain/defaultds"/>
+      <QOS value="0"/>
+      <AdvancedProperties>
+        <property componentType="NotifiableRESTSource" batch_size="1000" dataflow_throttling_policy="slowdown" batch_time="100" modelComponentType="NotifiableRESTSource" componentGroup="Source" componentCategory="source" componentName="AS_Source_Source" enable_monitor="true" dataflow_eps_limit="-1" poll_rate="1000"/>
+        <property componentType="DelimittedStringToXMLConverter" dataflow_throttling_policy="slowdown" buffer_size="1000" modelComponentType="DelimittedStringToXMLConverter" componentGroup="" componentCategory="converter" componentName="AS_Source_Converter" enable_monitor="true" dataflow_eps_limit="-1" concurrency="0"/>
+        <property componentType="Target1/FileTarget" entry="Default/Target1" batch_size="-1" dataflow_throttling_policy="slowdown" buffer_size="1000" batch_time="-1" modelComponentType="FileTarget" componentGroup="Default" componentCategory="target" componentName="AS_Views_Default_Targets_Target1_Target" enable_monitor="true" dataflow_eps_limit="-1"/>
+      </AdvancedProperties>
+      <ExceptionCondition act="skip" logException="true" logEvent="true">
+        <Source retry="5" delay="5" timeunit="second"/>
+        <Target retry="5" delay="5" timeunit="second"/>
+      </ExceptionCondition>
+    </DeploymentSetting>
+  </ModelInfo>
+</ActivityStreamModel>

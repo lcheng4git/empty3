@@ -1,0 +1,60 @@
+<ActivityStreamModel description="" name="rest2file0107" timezone="Asia/Shanghai" daylight="false" live="true">
+  <ModelInfo validated="true">
+    <Source>
+      <DataSource type="NotifiableRESTSource" connectionTestable="false">
+        <property label="Expose Service Name" type="boolean" value="true" name="exposeServiceName" desc=""/>
+        <property controlName="exposeServiceName" contorlValue="true" optional="true" description="the service name" label="Service Name" type="string" name="serviceName" desc="" value="service123"/>
+      </DataSource>
+      <Filter type="expression">
+        <property name="filter-operation" type="string" value="RegExp"/>
+        <property name="filter-argument" type="string" value=""/>
+      </Filter>
+    <Samples type="upload">
+    </Samples>
+    </Source>
+    <GlobalProperties>
+    </GlobalProperties>
+    <DeletedNamespaces>
+    </DeletedNamespaces>
+    <UserSchemas>
+    </UserSchemas>
+        <View name="Default" desc="">
+        <Rule type="PerEvent"/>
+        <Filters type="expression" relation="AND">
+        </Filters>
+        <Mapping output="xml" type="auto">
+        </Mapping>
+        <Targets>
+           <Target name="Target1" type="FileTarget">
+             <property desc="The file and path name of the target." label="File Path" type="string" name="file" value="d:\rest2file123.log"/>
+             <property desc="The file encoding. The default is utf-8." constraints="encoding" optional="true" label="File Encoding" type="string" value="UTF-8" name="fileEncoding"/>
+             <property desc="The event type. Only string is supported." hidden="true" enums="string,xml,json,tuple," optional="true" label="Event Type" type="string" value="string" name="eventType"/>
+             <property desc="The file rollover pattern. It can be DATE (default) or SIZE." enumDyn="true" enums="DATE=DATE,SIZE=SIZE," optional="true" label="Rollover Pattern" type="string" value="DATE" name="rolloverPattern"/>
+             <property desc="The file rollover pattern for DATE. The default value is &apos;.&apos;yyyy-MM-dd&apos;.log&apos;. It is ignored for rollover pattern SIZE." controlName="rolloverPattern" contorlValue="DATE" optional="true" label="Date Pattern" type="string" value="&apos;.&apos;yyyy-MM-dd&apos;.log&apos;" name="datePattern"/>
+             <property desc="The maximum file size in byte of rollover pattern SIZE. The default value is 5242880 (5MB). It is ignored for rollover pattern DATE. 0 for single event per file." constraints="min=0, max=10485760, step=1024" controlName="rolloverPattern" contorlValue="SIZE" optional="true" label="Max File Size" type="number" value="5242880" name="maxFileSize" numberType="int"/>
+             <property desc="The maximum number of backup files. The default value is 5." constraints="min=1, max=100, step=1" optional="true" label="Max Backup Index" type="number" value="5" name="maxBackupIndex" numberType="int"/>
+             <property desc="The log4j pattern to write message into file. The default value is %m%n." optional="true" label="Conversion Pattern" type="string" value="%m%n" name="conversionPattern"/>
+             <property desc="Write a header to the target file." optional="true" label="Header" type="string" value="" name="header"/>
+             <property desc="Write a footer to the target file." optional="true" label="Footer" type="string" value="" name="footer"/>
+             <property name="remove_event_wrapper" label="Remove Wrapper" value="false" type="boolean"/>
+             <property name="###parse_to_string###" label="Parse to String" value="false" type="boolean"/>
+             <Mapping output="xml" type="auto" input="xml">
+             </Mapping>
+           </Target>
+        </Targets>
+    </View>
+    <DeploymentSetting>
+      <ServerTag value=""/>
+      <DataSource value="/vitria/m3o/datasource/DefaultDomain/defaultds"/>
+      <QOS value="0"/>
+      <AdvancedProperties>
+        <property componentType="NotifiableRESTSource" batch_size="1000" dataflow_throttling_policy="slowdown" batch_time="100" modelComponentType="NotifiableRESTSource" componentGroup="Source" componentCategory="source" componentName="AS_Source_Source" enable_monitor="true" dataflow_eps_limit="-1" poll_rate="1000"/>
+        <property componentType="Target1/FileTarget" entry="Default/Target1" batch_size="-1" dataflow_throttling_policy="slowdown" buffer_size="1000" batch_time="-1" modelComponentType="FileTarget" componentGroup="Default" componentCategory="target" componentName="AS_Views_Default_Targets_Target1_Target" enable_monitor="true" dataflow_eps_limit="-1"/>
+      </AdvancedProperties>
+      <ExceptionCondition act="skip" logException="true" logEvent="true">
+        <Source retry="5" delay="5" timeunit="second"/>
+        <Target retry="5" delay="5" timeunit="second"/>
+      </ExceptionCondition>
+    </DeploymentSetting>
+  </ModelInfo>
+</ActivityStreamModel>
